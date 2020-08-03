@@ -18,7 +18,8 @@
     "@babel/core": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "babel-jest": "^26.2.2",
-    "sequelize": "^6.3.4"
+    "sequelize": "^6.3.4",
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "jest": "^26.2.2"

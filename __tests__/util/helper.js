@@ -1,8 +1,11 @@
+import { sequelize } from "../../lib/database";
+
 export async function before() {
-  console.log("before");
+  await sequelize.drop();
+  await sequelize.sync({ force: true });
   return;
 }
 export async function after() {
-  console.log("after");
+  await sequelize.drop();
   return;
 }
