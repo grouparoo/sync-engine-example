@@ -1,4 +1,4 @@
-import { before, after, expectSync } from "./helper";
+import { before, after, expectSync, stepTime } from "./helper";
 import { create, update, find } from "./data";
 
 export default function runSuite(name, syncMethodUnderTest) {
@@ -7,26 +7,32 @@ export default function runSuite(name, syncMethodUnderTest) {
     afterAll(after);
 
     test("add users", async () => {
-      await create({ id: 1, name: "Brian", time: 1 });
-      await create({ id: 2, name: "Ethan", time: 2 });
-      await create({ id: 3, name: "Sally", time: 3 });
+      await create(1);
+      await create(2);
+      await create(3);
 
       const row = await find(1);
-      expect(row.name).toBe("Brian");
       expect(row.version).toBe(1);
-      expect(row.updatedAt.getTime()).toBe(1596000001 * 1000);
+      expect(row.updatedAt.getTime()).toBe(1596000000 * 1000);
     });
 
     test("update user", async () => {
-      await update({ id: 1, name: "Craig", time: 4 });
+      stepTime();
+      await update(1);
       const row = await find(1);
-      expect(row.name).toBe("Craig");
       expect(row.version).toBe(2);
-      expect(row.updatedAt.getTime()).toBe(1596000004 * 1000);
+      expect(row.updatedAt.getTime()).toBe(1596000001 * 1000);
     });
 
-    test("sync users", async () => {
+    test("sync first users", async () => {
+      stepTime();
       await expectSync(syncMethodUnderTest, [1, 2, 3]);
+    });
+
+    test("find updated user", async () => {
+      stepTime();
+      await update(2);
+      await expectSync(syncMethodUnderTest, [2]);
     });
   });
 }

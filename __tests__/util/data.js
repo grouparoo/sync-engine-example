@@ -1,23 +1,20 @@
 import { User } from "../../lib/database";
+import { getTime } from "./helper";
 
-export const BASETIME = 1596000000 * 1000; // Wednesday, July 29, 2020 5:20:00 AM
-
-export async function create({ id, name, time }) {
-  const updatedAt = new Date(BASETIME + time * 1000);
+export async function create(id, options = {}) {
+  const updatedAt = getTime(options.time);
 
   return await User.create({
     id,
-    name,
     version: 1,
     updatedAt,
   });
 }
 
-export async function update({ id, name, time }) {
-  const updatedAt = new Date(BASETIME + time * 1000);
+export async function update(id, options = {}) {
+  const updatedAt = getTime(options.time);
 
   const row = await find(id);
-  row.name = name;
   row.version = row.version + 1;
   row.updatedAt = updatedAt;
 

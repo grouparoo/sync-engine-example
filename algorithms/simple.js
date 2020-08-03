@@ -1,4 +1,6 @@
 import { User, getWatermark, setWatermark } from "../lib/database";
+import { Sequelize } from "sequelize";
+const Op = Sequelize.Op;
 
 export default async function sync(processRow) {
   // using node and sequelize
@@ -8,21 +10,23 @@ export default async function sync(processRow) {
     // first time we've ever sync'd - get all rows
     rows = await User.findAll();
   } else {
-    const rows = await User.findAll({
+    rows = await User.findAll({
       // otherwise, use watermark
       where: {
         updatedAt: {
-          $gt: watermark, // WHERE updatedAt > {watermark}
+          [Op.gt]: watermark, // WHERE updatedAt > {watermark}
         },
       },
-      order: ["updatedAt", "ASC"],
+      order: [["updatedAt", "ASC"]],
     });
   }
 
-  for (const row of rows) {
-    await processRow(row);
-  }
+  if (rows) {
+    for (const row of rows) {
+      await processRow(row);
+    }
 
-  const newWatermark = new Date(); // set to now
-  await setWatermark(newWatermark); // for next time
+    const newWatermark = new Date(); // set to now
+    await setWatermark(newWatermark); // for next time
+  }
 }
