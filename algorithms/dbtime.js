@@ -5,7 +5,7 @@ const Op = Sequelize.Op;
 // updates simple algorithm to use the times from the db instead of "now"
 export default async function sync(processRow) {
   // using node and sequelize
-  let watermark = await getWatermark();
+  const watermark = await getWatermark();
   let rows;
   if (!watermark) {
     // first time we've ever sync'd - get all rows
@@ -30,4 +30,5 @@ export default async function sync(processRow) {
     const newWatermark = rows[rows.length - 1].updatedAt;
     await setWatermark(newWatermark); // for next time
   }
+  return true; // done!
 }

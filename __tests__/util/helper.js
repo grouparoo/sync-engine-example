@@ -13,16 +13,25 @@ export async function after() {
   return;
 }
 
-export async function expectSync(sync, array, options) {
-  options = options || {};
-  let synced = [];
+async function runSync(syncMethod, synced, options) {
   const processRow = async function (row) {
     synced.push(row.id);
     if (options.process) {
       await options.process(row);
     }
   };
-  await sync(processRow);
+  return await syncMethod(processRow);
+}
+
+export async function expectSync(syncMethod, array, options) {
+  options = options || {};
+  let synced = [];
+
+  while (!(await runSync(syncMethod, synced, options))) {
+    if (options.batch) {
+      await options.batch();
+    }
+  }
   expect(synced).toEqual(expect.arrayContaining(array));
 }
 
@@ -37,6 +46,6 @@ export function getTime(timeNum) {
 export function stepTime() {
   timeStep++;
   const newTime = getTime();
-  console.log("stepTime", newTime.getTime());
+  // console.log("stepTime", newTime.getTime());
   MockDate.set(newTime);
 }
