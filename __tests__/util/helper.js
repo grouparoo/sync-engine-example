@@ -13,10 +13,14 @@ export async function after() {
   return;
 }
 
-export async function expectSync(sync, array) {
+export async function expectSync(sync, array, options) {
+  options = options || {};
   let synced = [];
-  const processRow = async (row) => {
+  const processRow = async function (row) {
     synced.push(row.id);
+    if (options.process) {
+      await options.process(row);
+    }
   };
   await sync(processRow);
   expect(synced).toEqual(expect.arrayContaining(array));

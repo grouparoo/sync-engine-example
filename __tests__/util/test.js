@@ -1,5 +1,6 @@
 import { before, after, expectSync, stepTime } from "./helper";
 import { create, update, find } from "./data";
+import { dumpDb } from "../../lib/database";
 
 export default function runSuite(name, syncMethodUnderTest) {
   describe(`${name} Tests`, () => {
@@ -33,6 +34,35 @@ export default function runSuite(name, syncMethodUnderTest) {
       stepTime();
       await update(2);
       await expectSync(syncMethodUnderTest, [2]);
+    });
+
+    test("row added at the same time just after", async () => {
+      // do not step
+      await create(4);
+      await expectSync(syncMethodUnderTest, [4]);
+    });
+
+    test("row added while processing", async () => {
+      let created = false;
+      stepTime();
+      await update(3);
+      await expectSync(syncMethodUnderTest, [3], {
+        process: async function () {
+          stepTime(); // takes a bit to process
+          if (!created) {
+            created = true;
+            await create(5); // row comes in while processing
+          }
+          stepTime();
+        },
+      });
+
+      await expectSync(syncMethodUnderTest, [5], {
+        process: async function () {
+          stepTime(); // takes a bit to process
+          stepTime();
+        },
+      });
     });
   });
 }

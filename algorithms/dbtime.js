@@ -2,7 +2,7 @@ import { User, getWatermark, setWatermark } from "../lib/database";
 import { Sequelize } from "sequelize";
 const Op = Sequelize.Op;
 
-// simple sync algorithm
+// updates simple algorithm to use the times from the db instead of "now"
 export default async function sync(processRow) {
   // using node and sequelize
   let watermark = await getWatermark();
@@ -15,7 +15,7 @@ export default async function sync(processRow) {
       // otherwise, use watermark
       where: {
         updatedAt: {
-          [Op.gt]: watermark, // WHERE updatedAt > {watermark}
+          [Op.gte]: watermark, // WHERE updatedAt >= {watermark}
         },
       },
       order: [["updatedAt", "ASC"]],
@@ -27,7 +27,7 @@ export default async function sync(processRow) {
       await processRow(row);
     }
 
-    const newWatermark = new Date(); // set to now
+    const newWatermark = rows[rows.length - 1].updatedAt;
     await setWatermark(newWatermark); // for next time
   }
 }
