@@ -1,0 +1,26 @@
+{
+  "name": "sync-engine-example",
+  "version": "0.0.1",
+  "description": "Algorithm and tests for a simple SQL sync algorithm.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grouparoo/sync-engine-example"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "brian@bleonard.com",
+  "license": "MIT",
+  "engines": {
+    "node": "12.x.x"
+  },
+  "dependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "babel-jest": "^26.2.2",
+    "sequelize": "^6.3.4"
+  },
+  "devDependencies": {
+    "jest": "^26.2.2"
+  }
+}
