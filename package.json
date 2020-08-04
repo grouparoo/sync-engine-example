@@ -7,7 +7,12 @@
     "url": "https://github.com/grouparoo/sync-engine-example"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "simple": "jest __tests__/simple.js",
+    "dbtime": "jest __tests__/dbtime.js",
+    "batch": "jest __tests__/batch.js",
+    "steps": "jest __tests__/steps.js",
+    "secondary": "jest __tests__/secondary.js"
   },
   "author": "brian@bleonard.com",
   "license": "MIT",
