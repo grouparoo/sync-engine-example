@@ -41,3 +41,22 @@ There are some expected failures because some of the algorithms are not complete
 - [batch](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/batch.js): Adds batching to save on memory, but introduces failures because of race conditions with offsets.
 - [steps](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/steps.js): A hybrid of batch (most of the time) and dbtime (when there are many rows with the same timestamp).
 - [secondary](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/secondary.js): Adds knowledge of a auto-increment ascending column to batch without the offset issues.
+
+## Contributing
+
+Is there a test (that should work) that makes some of these fail? That would be great!
+
+The same tests are [shared](https://github.com/grouparoo/sync-engine-example/blob/master/__tests__/util/test.js) between all the algorithms. Feel free to add a new one.
+
+The current suite a pretty good set of examples. You can use these methods:
+
+- `create`: Makes a new `id` given the primary key. The `id` has to be ascending within the current suite.
+- `update`: Updates a row given the `id` value.
+- `stepTime`: There is a global clock and this moves it forward. You can't go backwards!
+- `expectSync`: Runs the algorithm. Fails the test if the given array of rows are not processed as expected.
+
+Feel free to write a new algorithm, too. In general, I wrote a failing test for the current algorithm and then a new algorithm that would fix it.
+
+Other things that are useful to know for edge cases:
+
+- There is a batchSize that the algorithm use set to `5` [here](https://github.com/grouparoo/sync-engine-example/blob/master/lib/database.js). Use this in your algorithm.
