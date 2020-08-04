@@ -23,7 +23,7 @@ export default async function sync(processRow) {
   }
 
   const rows = await User.findAll(sqlOptions);
-  if (!rows) {
+  if (!rows || rows.length === 0) {
     return true;
   } else {
     for (const row of rows) {

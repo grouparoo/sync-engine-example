@@ -6,13 +6,27 @@ const Op = Sequelize.Op;
 // but works around offset by risking memory for large single timestamps
 export default async function sync(processRow) {
   // using node and sequelize
-  const watermark = await getWatermark();
+  const saved = await getWatermark();
+  const watermark = saved ? saved.watermark : null;
+  const oldLarge = saved ? saved.large : null;
+
   const sqlOptions = {
-    limit: batchSize,
     order: [["updatedAt", "ASC"]],
   };
+  let allInOne = false;
 
-  if (watermark) {
+  if (!watermark) {
+    sqlOptions.limit = batchSize;
+  } else if (oldLarge) {
+    // this is a large single value with a watermark, so get it all at once
+    sqlOptions.where = {
+      updatedAt: {
+        [Op.eq]: watermark,
+      },
+    };
+    allInOne = true;
+  } else {
+    sqlOptions.limit = batchSize;
     sqlOptions.where = {
       updatedAt: {
         [Op.gte]: watermark, // WHERE updatedAt >= {watermark}
@@ -21,52 +35,30 @@ export default async function sync(processRow) {
   }
 
   let rows = await User.findAll(sqlOptions);
-  if (!rows) {
-    return true;
+  let newWatermark = watermark;
+  let done = false;
+  if (!rows || rows.length === 0) {
+    done = true;
   } else {
-    let done = rows.length < batchSize; // is there more to be done?
-    let lastTime = rows[rows.length - 1].updatedAt.getTime();
-    let bigBatch = false;
+    done = rows.length < batchSize; // is there more to be done?
 
-    if (!done && watermark === lastTime) {
-      // uh-oh, there are more to deal with here. Get all of those at once.
-      bigBatch = true;
-      rows = await User.findAll({
-        where: {
-          updatedAt: {
-            [Op.eq]: lastTime,
-          },
-        },
-      });
+    newWatermark = rows[rows.length - 1].updatedAt.getTime();
+    if (!allInOne && !done && watermark === newWatermark) {
+      // try it all in one
+      await setWatermark({ watermark: newWatermark, large: true });
+      return false;
     }
 
     for (const row of rows) {
       await processRow(row);
     }
-
-    if (bigBatch) {
-      // ok, so we just handled that extra big batch
-      // we have to know if more were added after that. The only way to know is if there is a later timestamp.
-      const oneMoreMs = lastTime + 1;
-      const left = await User.count({
-        where: {
-          updatedAt: {
-            [Op.gte]: oneMoreMs,
-          },
-        },
-      });
-      if (left > 0) {
-        // there are more after it, so we can move it forward
-        // otherwise, there still might be more later at this time, so leave it.
-        lastTime = oneMoreMs;
-        done = false; // keep going
-      } else {
-        done = true; // we are done for now, then.
-        // it will reprocess later unfortunately, but we don't want to miss any
-      }
-    }
-
-    await setWatermark(lastTime);
-    return done;
   }
+
+  if (allInOne) {
+    // we just did one big batch, advance to the next thing
+    newWatermark = watermark + 1;
+    done = false;
+  }
+  await setWatermark({ watermark: newWatermark, large: false });
+  return done;
 }

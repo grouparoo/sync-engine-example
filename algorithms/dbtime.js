@@ -22,7 +22,7 @@ export default async function sync(processRow) {
     });
   }
 
-  if (rows) {
+  if (rows && rows.length > 0) {
     for (const row of rows) {
       await processRow(row);
     }
