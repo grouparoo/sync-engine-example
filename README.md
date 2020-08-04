@@ -36,8 +36,8 @@ There are some expected failures because some of the algorithms are not complete
 
 ## Algorithms
 
-- simple: A naive current-time-based approach with a few failures.
-- dbtime: Upgrades simple to use the database times, removing race conditions. Might use too much memory.
-- batch: Adds batching to save on memory, but introduces failures because of race conditions with offsets.
-- steps: A hybrid of batch (most of the time) and dbtime (when there are many rows with the same timestamp).
-- secondary: Adds knowledge of a auto-increment ascending column to batch without the offset issues.
+- [simple](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/simple.js): A naive current-time-based approach with a few failures.
+- [dbtime](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/dbtime.js): Upgrades simple to use the database times, removing race conditions. Might use too much memory.
+- [batch](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/batch.js): Adds batching to save on memory, but introduces failures because of race conditions with offsets.
+- [steps](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/steps.js): A hybrid of batch (most of the time) and dbtime (when there are many rows with the same timestamp).
+- [secondary](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/secondary.js): Adds knowledge of a auto-increment ascending column to batch without the offset issues.
