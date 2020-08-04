@@ -42,7 +42,7 @@ All of the current approaches do delta-based synchronization based on the `updat
 - [dbtime](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/dbtime.js): Upgrades simple to use the database times, removing race conditions. Might use too much memory.
 - [batch](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/batch.js): Adds batching to save on memory, but introduces failures because of race conditions with offsets.
 - [steps](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/steps.js): A hybrid of batch (most of the time) and dbtime (when there are many rows with the same timestamp).
-- [secondary](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/secondary.js): Adds knowledge of a auto-increment ascending column to batch without the offset issues.
+- [secondary](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/secondary.js): Adds knowledge of a auto-increment ascending column (`id`) to batch without the offset or memory issues.
 
 ## Contributing
 
