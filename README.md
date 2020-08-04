@@ -2,9 +2,9 @@
 
 This repo implements a few algorithms that are made to synchronize changes to a SQL database table to an external destination as described in [this blog post](TODO).
 
-Maybe you want to monitor your `users` table for changes and do something as they happen. For example, update them in your data warehouse or Mailchimp.
+This is interesting because you might want to monitor your `users` table for changes and do something as they happen. For example, update them in your data warehouse or Mailchimp.
 
-All of the current approaches do delta-based synchronization based on the `updatedAt` timestamp in the table.
+If you don't want to worry about these kinds of details and just make those use cases happen in a much more fully-featured way, check out [Grouparoo](https://github.com/grouparoo/grouparoo).
 
 ## Run it
 
@@ -35,6 +35,8 @@ Time:        0.818 s, estimated 1 s
 There are some expected failures because some of the algorithms are not complete enough.
 
 ## Algorithms
+
+All of the current approaches do delta-based synchronization based on the `updatedAt` timestamp in the table.
 
 - [simple](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/simple.js): A naive current-time-based approach with a few failures.
 - [dbtime](https://github.com/grouparoo/sync-engine-example/blob/master/algorithms/dbtime.js): Upgrades simple to use the database times, removing race conditions. Might use too much memory.
