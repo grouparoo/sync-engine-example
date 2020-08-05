@@ -1,6 +1,6 @@
 ## Sync Engine Example
 
-This repo implements a few algorithms that are made to synchronize changes to a SQL database table to an external destination as described in [this blog post](TODO).
+This repo implements a few algorithms that are made to synchronize changes to a SQL database table to an external destination as described in [this blog post](https://www.grouparoo.com/blog/building-a-sync-engine).
 
 This is interesting because you might want to monitor your `users` table for changes and do something as they happen. For example, update them in your data warehouse or Mailchimp.
 
@@ -62,3 +62,15 @@ Feel free to write a new algorithm, too. In general, I wrote a failing test for 
 Other things that are useful to know for edge cases:
 
 - There is a batchSize that the algorithm use set to `5` [here](https://github.com/grouparoo/sync-engine-example/blob/master/lib/database.js). Use this in your algorithm.
+
+## Pictures
+
+I started making some pictures for the [blog post](https://www.grouparoo.com/blog/building-a-sync-engine).
+
+#### Simple
+
+![Simple algorithm](https://github.com/grouparoo/sync-engine-example/raw/master/files/simple.png)
+
+#### Batch
+
+![Batch algorithm](https://github.com/grouparoo/sync-engine-example/raw/master/files/batch.png)
