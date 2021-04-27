@@ -69,8 +69,8 @@ I started making some pictures for the [blog post](https://www.grouparoo.com/blo
 
 #### Simple
 
-![Simple algorithm](https://github.com/grouparoo/sync-engine-example/raw/master/files/simple.png)
+![Simple algorithm](https://raw.githubusercontent.com/grouparoo/sync-engine-example/main/files/simple.png)
 
 #### Batch
 
-![Batch algorithm](https://github.com/grouparoo/sync-engine-example/raw/master/files/batch.png)
+![Batch algorithm](https://raw.githubusercontent.com/grouparoo/sync-engine-example/main/files/batch.png)
