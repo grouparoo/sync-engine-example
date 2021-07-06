@@ -24,7 +24,7 @@
     "@babel/preset-env": "^7.11.0",
     "babel-jest": "^26.2.2",
     "mockdate": "^3.0.5",
-    "sequelize": "^6.3.4",
+    "sequelize": "^6.6.5",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
