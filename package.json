@@ -20,7 +20,7 @@
     "node": "12.x.x"
   },
   "dependencies": {
-    "@babel/core": "^7.15.0",
+    "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "babel-jest": "^27.1.0",
     "mockdate": "^3.0.5",
